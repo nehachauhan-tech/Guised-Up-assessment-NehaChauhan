@@ -53,16 +53,57 @@ A full-stack social platform showcasing an authenticity-first feed ranking syste
 - D3: Anomaly detection (high views, zero reactions)
 - D4: Spam detection (high post frequency)
 
+## Quick Start
+
+### Run the API (Python Flask)
+
+```bash
+# Install dependencies
+pip install flask
+
+# Start API server
+python3 backend/api.py
+
+# API will be available at http://localhost:8000
+```
+
+### Test All Endpoints
+
+```bash
+# 1. Login and get token
+TOKEN=$(curl -s -X POST http://localhost:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user1@guised.up","password":"password"}' | python3 -c "import sys, json; print(json.load(sys.stdin)['token'])")
+
+# 2. Get feed
+curl -X GET "http://localhost:8000/api/feed?page=1" \
+  -H "Authorization: Bearer $TOKEN"
+
+# 3. Create post
+curl -X POST http://localhost:8000/api/posts \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"text":"My authentic moment!","image_url":null}'
+
+# 4. Search
+curl -X GET "http://localhost:8000/api/search?q=authentic" \
+  -H "Authorization: Bearer $TOKEN"
+
+# 5. Log interaction
+curl -X POST http://localhost:8000/api/interactions \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"post_id":1,"interaction_type":"view"}'
+```
+
 ## Setup Instructions
 
 ### Prerequisites
 - Node.js 18+
-- PHP 8.1+
 - Python 3.9+
-- PostgreSQL or MySQL
-- Docker (optional, for Vector DB)
+- PostgreSQL (optional, for production)
 
-### Backend Setup
+### Backend Setup (Production - Laravel)
 
 ```bash
 cd backend

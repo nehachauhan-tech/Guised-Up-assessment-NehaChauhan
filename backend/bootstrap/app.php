@@ -1,19 +1,16 @@
 <?php
 
 use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Configuration\Exceptions;
-use Illuminate\Foundation\Configuration\Middleware;
 
-$app = Application::configure(basePath: dirname(__DIR__))
+return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         api: __DIR__.'/../routes/api.php',
+        apiPrefix: 'api',
     )
-    ->withMiddleware(function (Middleware $middleware) {
-        $middleware->statefulApi();
+    ->withMiddleware(function ($middleware) {
+        //
     })
-    ->withExceptions(function (Exceptions $exceptions) {
+    ->withExceptions(function ($exceptions) {
         //
     })
     ->create();
-
-return $app;
