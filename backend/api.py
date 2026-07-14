@@ -40,6 +40,42 @@ def seed_posts():
 
 seed_posts()
 
+@app.route('/', methods=['GET'])
+def home():
+    """Welcome page"""
+    return jsonify({
+        "status": "✅ Guised Up API Running",
+        "version": "1.0",
+        "environment": "development",
+        "base_url": "http://localhost:8000",
+        "endpoints": {
+            "auth": "POST /api/auth/login",
+            "feed": "GET /api/feed?page=1",
+            "posts": "POST /api/posts",
+            "search": "GET /api/search?q=query",
+            "interactions": "POST /api/interactions",
+            "health": "GET /health"
+        },
+        "test_users": {
+            "user1": "user1@guised.up",
+            "user2": "user2@guised.up",
+            "user3": "user3@guised.up",
+            "password": "password"
+        },
+        "documentation": "https://github.com/nehachauhan-tech/Guised-Up-assessment-NehaChauhan",
+        "message": "Welcome to Guised Up - Real Connections Feed"
+    }), 200
+
+@app.route('/health', methods=['GET'])
+def health():
+    """Health check endpoint"""
+    return jsonify({
+        "status": "ok",
+        "posts": len(posts_db),
+        "users": len(users_db),
+        "timestamp": datetime.now().isoformat()
+    }), 200
+
 @app.route('/api/auth/login', methods=['POST'])
 def login():
     """POST /api/auth/login - Authenticate user with email/password"""
@@ -144,11 +180,6 @@ def log_interaction():
         "interaction_type": data.get('interaction_type'),  # view, reply, reaction
         "created_at": datetime.now().isoformat()
     }), 201
-
-@app.route('/health', methods=['GET'])
-def health():
-    """Health check endpoint"""
-    return jsonify({"status": "ok", "posts": len(posts_db)}), 200
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8000))
